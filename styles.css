@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Press+Start+2P&display=swap');
+body {
+    background-color: #00425A;
+}
+
+#seleccionar_mascota {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.title {
+    color: #FF6E31;
+    font-size: 96px;
+    font-family: 'Press Start 2P', cursive; 
+    margin: 0;
+}
+
+.subtitle{
+    color: #FF6E31;
+    font-size: 26px;
+    font-family: 'Lilita One', cursive;
+}
+
+.tarjetas, .botones_ataques {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    display: none;
+}
+input:checked + label {
+    background-color: #fce6ad92;
+    width: 178px;
+    height: 102px;
+    margin: 12px;
+}
+
+.tarjeta_mokepon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 176px;
+    height: 100px;
+    margin: 10px;
+    background-color: #FFEBB7;
+    color: #FF6E31;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive; 
+    border: 3px solid black;
+    border-radius: 20px;
+    font-size: 10px;
+}
+
+.tarjeta_mokepon img {
+    width: 50px;
+}
+
+#boton_mascota{
+    width: 300px;
+    height: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    border: 3px solid white;
+    background: transparent;
+    color: #FF6E31;
+    font-family: 'Lilita One', cursive;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+/*Hovers*/
+.tarjeta_mokepon:hover {
+    background-color: #fce6ad92;
+    cursor: pointer;
+}
+
+#boton_mascota:hover {
+    background-color: #fee198;
+    cursor: pointer;
+}
+
+.ataques:hover{
+    background-color: #FF6E31;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+#boton-reiniciar:hover {
+    background-color: #FF6E31;
+    cursor: pointer;
+    color: #ffffff;
+    width: 150px;
+    height: 50px;
+}
+
+#selecionar_ataque {
+    flex-direction: column;
+    align-items: center;
+}
+
+.ataques {
+    width: 116px;
+    height: 50px;
+    padding: 10px;
+    margin: 0px 2px 0px 12px;
+    border-radius: 15px;
+    border: 3px solid white;
+    background: transparent;
+    color: #FF6E31;
+    font-family: 'Lilita One', cursive;
+    font-size: 20px;
+    
+}
+
+#mensajes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 216px;
+    margin-top: 27px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #FFEBB7;
+    color: black;
+    font-size: 20px;
+    text-align: center;
+    border: 3px solid black;
+}
+
+#boton-reiniciar {
+    border: 3px solid white;
+    border-radius: 20px;
+    color: #FF6E31;
+    font-family: 'Lilita One', cursive;
+    background-color: transparent;
+    width: 100px;
+}
+
+.ataquess {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    color: #FF6E31;
+    background-color: #FFE5B4;
+    border-radius: 15px;
+    margin-top: 30px;
+    font-size: 22px;
+    font-family: 'Lilita One', cursive;
+    
+}
+
+.ataquess_jugador, .ataquess_enemigo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width:360px) {
+    .title {
+        font-size:48px;
+    }
+    .subtitle {
+        font-size: 22px;
+    }
+    .tarjetas{
+        flex-direction: column;
+    }
+
+    .botones_ataques {
+        flex-direction: column;
+    }
+}
