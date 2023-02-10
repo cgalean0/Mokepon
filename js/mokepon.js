@@ -7,8 +7,8 @@ const botonReiniciar = document.getElementById('boton-reiniciar');
 const sectionSeleccionarMascota = document.getElementById('seleccionar_mascota');
 const spanMascotaEnemigo = document.getElementById('mascota_enemigo');
 
-const spanVidasJugador = document.getElementById('vidas_jugador');
-const spanVIdasEnemigo = document.getElementById('vidas_enemigo');
+const spanVidasJugador = document.getElementById('victorias_jugador');
+const spanVIdasEnemigo = document.getElementById('victorias_enemigo');
 
 const sectionMensajes = document.getElementById('resultado');
 const ataqueDelJugador = document.getElementById('ataques_jugador');
@@ -33,6 +33,8 @@ let botonAgua
 let botonTierra
 let mascotaJugador
 let ataquesMokepon
+let victoriasJugador = 0
+let victoriasEnemigo = 0
 let ataquesMokeponEnemigo
 let vidasEnemigo = 3
 let vidasJugador = 3
@@ -146,14 +148,17 @@ function secuenciaAtaques() {
                 ataqueJugador.push('Fuego')
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
+                boton.disabled = true
             } else if(e.target.textContent === '💧'){
                 ataqueJugador.push('Agua')
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
+                boton.disabled = true
             } else {
                 ataqueJugador.push('Tierra')
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
+                boton.disabled = true
             }
             ataqueAleatorioEnemigo();
         })
@@ -193,27 +198,32 @@ function indexAmbosOponentes(jugador, enemigo) {
 }
 //Combate.
 function combate(){
-    for
-    if(ataqueJugador == ataqueEnemigo){
-        crearMensaje('Empate');
-    } else if(ataqueJugador == 'Fuego' && ataqueEnemigo == 'Tierra' || ataqueJugador == 'Tierra' && ataqueEnemigo == 'Agua' || ataqueJugador == 'Agua' && ataqueEnemigo == 'Fuego'){
-        crearMensaje('Ganaste');
-        vidasEnemigo--
-        spanVIdasEnemigo.innerHTML = vidasEnemigo;
-    } else {
-        crearMensaje('Perdiste');
-        vidasJugador--
-        spanVidasJugador.innerHTML = vidasJugador;   
-    } 
-    revisarVidas();
-    
+    for (let i = 0; i < ataqueJugador.length; i++) {
+        if(ataqueJugador[i] === ataqueEnemigo[i]){
+            indexAmbosOponentes(i, i);
+            crearMensaje('Empate');
+        } else if(ataqueJugador[i]=== 'Agua' && ataqueEnemigo[i] === 'Fuego' || ataqueJugador[i] === 'Fuego' && ataqueEnemigo[i] === 'Tierra' || ataqueJugador[i] === 'Tierra' && ataqueEnemigo[i] === 'Agua') {
+            indexAmbosOponentes(i, i)
+            crearMensaje('Ganaste')
+            victoriasJugador++
+            spanVidasJugador.innerHTML = victoriasJugador
+        } else {
+            indexAmbosOponentes(i, i)
+            crearMensaje('Perdiste')
+            victoriasEnemigo++
+            spanVIdasEnemigo.innerHTML = victoriasEnemigo
+        }
+    }
+    revisarVictorias();
 }
 //Revisar Vidas
-function revisarVidas(){
-    if(vidasJugador == 0){
-        crearMensajeFinal('Tu mascota no puede continuar, No tiene mas vidas');
-    } else if(vidasEnemigo == 0){
-        crearMensajeFinal('Tu mascota gana el combate, Sigue asi😎');
+function revisarVictorias(){
+    if(victoriasJugador === victoriasEnemigo){
+        crearMensajeFinal('Fue Un empate, Puedes Mejorar👀');
+    } else if(victoriasJugador > victoriasEnemigo){
+        crearMensajeFinal('Great, Ganamos el combate🏆');
+    } else {
+        crearMensajeFinal('Acabamos de Perder😓');
     }
 }
 //crear Mensajes
@@ -232,9 +242,6 @@ function crearMensaje(resultado){
 function crearMensajeFinal(resultadoFinal){
 
     sectionMensajes.innerHTML = resultadoFinal
-    botonFuego.disabled = true
-    botonAgua.disabled = true
-    botonTierra.disabled = true
     botonReiniciarOculto.style.display ='block';
 }
 //Reiniciar Juego
