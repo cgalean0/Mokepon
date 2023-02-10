@@ -1,4 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Press+Start+2P&display=swap');
+
+:root{
+    --colorPrincipal: #EAA81B;
+    --colorSecundario: #C95501;
+    --colorTerciario: #7D0000;
+    --colorCuaternario: #012C0B;
+}
 body {
     background-color: #00425A;
 }
@@ -12,14 +19,14 @@ body {
 }
 
 .title {
-    color: #FF6E31;
+    color: var(--colorSecundario);
     font-size: 96px;
     font-family: 'Press Start 2P', cursive; 
     margin: 0;
 }
 
 .subtitle{
-    color: #FF6E31;
+    color: var(--colorPrincipal);
     font-size: 26px;
     font-family: 'Lilita One', cursive;
 }
@@ -33,7 +40,7 @@ input {
     display: none;
 }
 input:checked + label {
-    background-color: #fce6ad92;
+    background-color: #fce6ad92;/*Cambiar*/
     width: 178px;
     height: 102px;
     margin: 12px;
@@ -43,12 +50,12 @@ input:checked + label {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 4px;
     width: 176px;
     height: 100px;
     margin: 10px;
-    background-color: #FFEBB7;
-    color: #FF6E31;
+    background-color: var(--colorCuaternario);
+    color: var(--colorPrincipal);
     padding: 10px;
     box-sizing: border-box;
     font-family: 'Press Start 2P', cursive; 
