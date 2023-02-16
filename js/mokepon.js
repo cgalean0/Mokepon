@@ -47,25 +47,40 @@ let mapabackground = new Image()
 mapabackground.src = '../assets/Pueblo_Paleta_HGSS.png'
 
 class Mokepon{
-    constructor(nombre, foto, vida){
+    constructor(nombre, foto, vida, fotoMapa, x = 10, y = 10){
         this.nombre = nombre;
         this.foto = foto;
         this.vida = vida;
         this.ataques = []
-        this.x = 20
-        this.y = 30
-        this.ancho = 80
-        this.alto = 80
+        this.x = x
+        this.y = y
+        this.ancho = 40
+        this.alto = 40
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
         this.velocidadX = 0
         this.velocidadY = 0
     }
+
+    pintarMokepon(){
+        lienzo.drawImage(
+            this.mapaFoto,
+            this.x,
+            this.y,
+            this.ancho,
+            this.alto
+        )
+    }
 }
 //Objetos
-let squirtle = new Mokepon('Squirtle', './assets/squirtle.png', 5);
-let bulbasaur = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5);
-let charmander = new Mokepon('Charmander', './assets/charmander.png', 5);
+let squirtle = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png');
+let bulbasaur = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
+let charmander = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
+
+let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png', 360,50);
+let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png', 190, 150);
+let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png', 190,280);
+
 
 squirtle.ataques.push(
     {nombre: '💧', id: 'boton_agua'},
@@ -295,13 +310,15 @@ function pintarCanvas(){
         mapa.width,
         mapa.height
     )
-    lienzo.drawImage(
-        mascotaJugadorObjeto.mapaFoto,
-        mascotaJugadorObjeto.x,
-        mascotaJugadorObjeto.y,
-        mascotaJugadorObjeto.ancho,
-        mascotaJugadorObjeto.alto
-    )
+    mascotaJugadorObjeto.pintarMokepon();
+    squirtleEnemigo.pintarMokepon();
+    bulbasaurEnemigo.pintarMokepon();
+    charmanderEnemigo.pintarMokepon();
+    if(mascotaJugadorObjeto.velocidadX !== 0 || mascotaJugadorObjeto.velocidadY !== 0){
+        revisarColision(squirtleEnemigo);
+        revisarColision(bulbasaurEnemigo);
+        revisarColision(charmanderEnemigo);
+    }
 }
 
 function moverX() {
@@ -351,5 +368,24 @@ function obtenerObjetoMascota() {
            return mokepones[i]
         }
     }
+}
+
+function revisarColision(enemigo){
+    const arribaEnemigo = enemigo.y
+    const abajoEnemigo = enemigo.y + enemigo.alto
+    const derechaEnemigo = enemigo.x + enemigo.ancho
+    const izquierdaEnemigo = enemigo.x
+
+    const arribaMascota= mascotaJugadorObjeto.y
+    const abajoMascota = mascotaJugadorObjeto.y + mascotaJugadorObjeto.alto
+    const derechaMascota = mascotaJugadorObjeto.x + mascotaJugadorObjeto.ancho
+    const izquierdaMascota = mascotaJugadorObjeto.x
+
+    if(abajoMascota < arribaEnemigo || arribaMascota > abajoEnemigo || derechaMascota < izquierdaEnemigo ||izquierdaMascota > derechaEnemigo) {
+        return
+    }
+    detenerMovimiento();
+    alert("Hay colision con " + enemigo.nombre)
+    
 }
 window.addEventListener('load', iniciarJuego)
