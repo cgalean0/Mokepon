@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bellota:wght@300&family=Lilita+One&family=Nabla&display=swap');
 
 :root{
     --colorPrincipal: #EAA81B;
@@ -7,7 +7,7 @@
     --colorCuaternario: #012C0B;
 }
 body {
-    background-color: #00425A;
+    background-color: #041b24;
 }
 
 #seleccionar_mascota {
@@ -20,11 +20,14 @@ body {
 
 .title {
     color: var(--colorSecundario);
-    font-size: 96px;
-    font-family: 'Press Start 2P', cursive; 
+    font-size: 108px;
+    font-family: 'Nabla', cursive;
     margin: 0;
 }
-
+.title2 {
+    font-size: 54px;
+    font-family: 'Nabla', cursive;
+}
 .subtitle{
     color: var(--colorPrincipal);
     font-size: 26px;
@@ -50,7 +53,7 @@ input:checked + label {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 1px;
     width: 176px;
     height: 100px;
     margin: 10px;
@@ -58,14 +61,14 @@ input:checked + label {
     color: var(--colorPrincipal);
     padding: 10px;
     box-sizing: border-box;
-    font-family: 'Press Start 2P', cursive; 
+    font-family: 'Bellota', cursive; 
     border: 3px solid black;
     border-radius: 20px;
-    font-size: 10px;
+    font-size: 18px;
 }
 
 .tarjeta_mokepon img {
-    width: 50px;
+    width: 68px;
 }
 
 #boton_mascota{
@@ -76,7 +79,7 @@ input:checked + label {
     border-radius: 15px;
     border: 3px solid white;
     background: transparent;
-    color: #FF6E31;
+    color: var(--colorPrincipal);
     font-family: 'Lilita One', cursive;
     font-size: 20px;
     margin-top: 20px;
@@ -89,7 +92,8 @@ input:checked + label {
 }
 
 #boton_mascota:hover {
-    background-color: #fee198;
+    width: 350px;
+    height: 55px;
     cursor: pointer;
 }
 
@@ -120,7 +124,7 @@ input:checked + label {
     border-radius: 15px;
     border: 3px solid white;
     background: transparent;
-    color: #FF6E31;
+    color: var(--colorPrincipal);
     font-family: 'Lilita One', cursive;
     font-size: 20px;
     
@@ -145,7 +149,7 @@ input:checked + label {
 #boton-reiniciar {
     border: 3px solid white;
     border-radius: 20px;
-    color: #FF6E31;
+    color: var(--colorPrincipal);
     font-family: 'Lilita One', cursive;
     background-color: transparent;
     width: 100px;
@@ -154,7 +158,7 @@ input:checked + label {
 .ataquess {
     display: grid;
     grid-template-columns: 150px 150px;
-    color: #FF6E31;
+    color: var(--colorPrincipal);
     background-color: #FFE5B4;
     border-radius: 15px;
     margin-top: 30px;
@@ -169,14 +173,23 @@ input:checked + label {
     align-items: center;
 }
 
+#ver-mapa {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#mapa {
+    border: solid 2px wheat;
+}
 @media (max-width:360px) {
     .title {
-        font-size:48px;
+        font-size:62px;
     }
     .subtitle {
         font-size: 22px;
     }
     .tarjetas{
+        font-size: 48px;
         flex-direction: column;
     }
 

@@ -17,7 +17,10 @@ const ataqueDelEnemigo = document.getElementById('ataque_enemigo');
 const spanMascotaJugador = document.getElementById('mascota_jugador');
 const contenedorTarjetas = document.getElementById('contenedorTarjetas')
 const contenedorAtaques = document.getElementById('contenedorAtaques')
+const sectionVerMapa = document.getElementById('ver-mapa');
+const mapa = document.getElementById('mapa')
 
+let mascotaJugadorObjeto
 let mokepones = []
 let botones = []
 let opcionDeMokepones
@@ -38,6 +41,10 @@ let victoriasEnemigo = 0
 let ataquesMokeponEnemigo
 let vidasEnemigo = 3
 let vidasJugador = 3
+let lienzo = mapa.getContext('2d')
+let intervalo
+let mapabackground = new Image()
+mapabackground.src = '../assets/Pueblo_Paleta_HGSS.png'
 
 class Mokepon{
     constructor(nombre, foto, vida){
@@ -45,6 +52,14 @@ class Mokepon{
         this.foto = foto;
         this.vida = vida;
         this.ataques = []
+        this.x = 20
+        this.y = 30
+        this.ancho = 80
+        this.alto = 80
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
+        this.velocidadX = 0
+        this.velocidadY = 0
     }
 }
 //Objetos
@@ -78,6 +93,7 @@ mokepones.push(squirtle, bulbasaur, charmander)
 //Funcion iniciar juego.
 function iniciarJuego(){
     sectionSeleccionarAtaque.style.display = 'none';
+    sectionVerMapa.style.display = 'none';
 
     mokepones.forEach((Mokepon) => {
         opcionDeMokepones = `
@@ -101,7 +117,8 @@ function iniciarJuego(){
 }
 function seleccionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none';
-    sectionSeleccionarAtaque.style.display = 'flex';
+    //sectionSeleccionarAtaque.style.display = 'flex';
+    
 
     if(inputSquirtle.checked){
         spanMascotaJugador.innerHTML = inputSquirtle.id
@@ -117,6 +134,7 @@ function seleccionarMascotaJugador() {
     }
     extraerAtaques(mascotaJugador);
     seleccionarMascotaEnemigo();
+    iniciarMapa();
 }
 
 function extraerAtaques(mascotaJugador){
@@ -218,7 +236,7 @@ function combate(){
         if(ataqueJugador[i] === ataqueEnemigo[i]){
             indexAmbosOponentes(i, i);
             crearMensaje('Empate');
-        } else if(ataqueJugador[i]=== 'Fuego' && ataqueEnemigo[i] === 'Tierra' || ataqueJugador[i] === 'Fuego' && ataqueEnemigo[i] === 'Puño' || ataqueJugador[i] === 'Tierra' && ataqueEnemigo[i] === 'Patada' || ataqueJugador[i] === 'Tierra'  && ataqueEnemigo[i] === 'Agua' || ataqueJugador[i] === 'Puño' && ataqueEnemigo[i] === 'Tierra' || ataqueJugador[i] === 'Puño' && ataqueEnemigo[i] === 'Agua' || ataqueJugador[i] === 'Patada' && ataqueEnemigo[i] === 'Puño' || ataqueJugador[i] === 'Patada' && ataqueEnemigo[i] === 'Fuego' || ataqueJugador[i] === 'Agua' && ataqueEnemigo[i] === 'Patada' || ataqueJugador[i] === 'Agua' && ataqueEnemigo[i] === 'Fuego') {
+        } else if(ataqueJugador[i]=== 'Fuego' && ataqueEnemigo[i] === '' || ataqueJugador[i] === 'Fuego' && ataqueEnemigo[i] === 'Puño' || ataqueJugador[i] === '' && ataqueEnemigo[i] === 'Patada' || ataqueJugador[i] === ''  && ataqueEnemigo[i] === 'Agua' || ataqueJugador[i] === 'Puño' && ataqueEnemigo[i] === '' || ataqueJugador[i] === 'Puño' && ataqueEnemigo[i] === 'Agua' || ataqueJugador[i] === 'Patada' && ataqueEnemigo[i] === 'Puño' || ataqueJugador[i] === 'Patada' && ataqueEnemigo[i] === 'Fuego' || ataqueJugador[i] === 'Agua' && ataqueEnemigo[i] === 'Patada' || ataqueJugador[i] === 'Agua' && ataqueEnemigo[i] === 'Fuego') {
             indexAmbosOponentes(i, i)
             crearMensaje('Ganaste')
             victoriasJugador++
@@ -237,9 +255,9 @@ function revisarVictorias(){
     if(victoriasJugador === victoriasEnemigo){
         crearMensajeFinal('Fue Un empate, Puedes Mejorar👀');
     } else if(victoriasJugador > victoriasEnemigo){
-        crearMensajeFinal('Great, Ganamos el combate🏆');
+        crearMensajeFinal('Great, Ganamos el Combate🏆');
     } else {
-        crearMensajeFinal('Acabamos de Perder😓');
+        crearMensajeFinal('Tu Mascota Pierde El Combate😓');
     }
 }
 //crear Mensajes
@@ -264,5 +282,74 @@ function crearMensajeFinal(resultadoFinal){
 function reiniciarJuego(){
     location.reload();
 }
-//Esperamos a que todo cargue para poder usar los elementos del documento.
+
+function pintarCanvas(){
+
+    mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.velocidadX
+    mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.velocidadY
+    lienzo.clearRect(0,0,mapa.width,mapa.height);
+    lienzo.drawImage(
+        mapabackground,
+        0,
+        0,
+        mapa.width,
+        mapa.height
+    )
+    lienzo.drawImage(
+        mascotaJugadorObjeto.mapaFoto,
+        mascotaJugadorObjeto.x,
+        mascotaJugadorObjeto.y,
+        mascotaJugadorObjeto.ancho,
+        mascotaJugadorObjeto.alto
+    )
+}
+
+function moverX() {
+    mascotaJugadorObjeto.velocidadX = 5
+}
+function moverY() {
+    mascotaJugadorObjeto.velocidadY = 5
+}
+function moverU() {
+    mascotaJugadorObjeto.velocidadY = -5 
+}
+function moverR() {
+    mascotaJugadorObjeto.velocidadX = -5
+}
+function capturaTecla() {
+    document.addEventListener('keydown', e=> {
+        if (e.key==='ArrowUp') {
+            mascotaJugadorObjeto.y-=5
+            pintarCanvas()
+        } else if (e.key==='ArrowDown') {
+            mascotaJugadorObjeto.y+=5
+            pintarCanvas()
+        } else if (e.key==='ArrowLeft') {
+            mascotaJugadorObjeto.x-=5
+            pintarCanvas()
+        } else if (e.key==='ArrowRight') {
+            mascotaJugadorObjeto.x+=5
+            pintarCanvas()
+        }
+    })
+}
+function detenerMovimiento(){
+    mascotaJugadorObjeto.velocidadX = 0
+    mascotaJugadorObjeto.velocidadY = 0
+}
+function iniciarMapa() {
+    mapa.width = 420
+    mapa.height = 360
+    mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador)
+    sectionVerMapa.style.display = 'flex'
+    intervalo = setInterval(pintarCanvas, 50)
+    capturaTecla();
+}
+function obtenerObjetoMascota() {
+    for (let i = 0; i < mokepones.length; i++) {       
+        if(mascotaJugador === mokepones[i].nombre){
+           return mokepones[i]
+        }
+    }
+}
 window.addEventListener('load', iniciarJuego)
