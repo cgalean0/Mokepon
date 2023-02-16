@@ -19,6 +19,7 @@ const contenedorTarjetas = document.getElementById('contenedorTarjetas')
 const contenedorAtaques = document.getElementById('contenedorAtaques')
 const sectionVerMapa = document.getElementById('ver-mapa');
 const mapa = document.getElementById('mapa')
+const anchoMaximoDelMapa = 350
 
 let mascotaJugadorObjeto
 let mokepones = []
@@ -45,17 +46,28 @@ let lienzo = mapa.getContext('2d')
 let intervalo
 let mapabackground = new Image()
 mapabackground.src = '../assets/Pueblo_Paleta_HGSS.png'
+let alturaQueBuscamos
+let anchoDelMapa = window.innerWidth - 20
+
+alturaQueBuscamos = anchoDelMapa * 600 / 800
+
+mapa.width = anchoDelMapa
+mapa.height = alturaQueBuscamos
+
+if(anchoDelMapa > anchoMaximoDelMapa){
+    anchoDelMapa = anchoMaximoDelMapa - 20
+}
 
 class Mokepon{
-    constructor(nombre, foto, vida, fotoMapa, x = 10, y = 10){
+    constructor(nombre, foto, vida, fotoMapa){
         this.nombre = nombre;
         this.foto = foto;
         this.vida = vida;
         this.ataques = []
-        this.x = x
-        this.y = y
         this.ancho = 40
         this.alto = 40
+        this.x = aleatorio(0,mapa.width - this.ancho)
+        this.y = aleatorio(0, mapa.height - this.alto)
         this.mapaFoto = new Image()
         this.mapaFoto.src = fotoMapa
         this.velocidadX = 0
@@ -77,9 +89,9 @@ let squirtle = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/sq
 let bulbasaur = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
 let charmander = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
 
-let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png', 360,50);
-let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png', 190, 150);
-let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png', 190,280);
+let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png');
+let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
+let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
 
 
 squirtle.ataques.push(
@@ -97,6 +109,28 @@ bulbasaur.ataques.push(
     {nombre: '👊', id: 'boton_puño'}
 )
 charmander.ataques.push(
+    {nombre: '🔥', id: 'boton_fuego'},
+    {nombre: '🔥', id: 'boton_fuego'},
+    {nombre: '🔥', id: 'boton_fuego'},
+    {nombre: '🦶', id: 'boton_patada'},
+    {nombre: '👊', id: 'boton_puño'}
+
+)
+squirtleEnemigo.ataques.push(
+    {nombre: '💧', id: 'boton_agua'},
+    {nombre: '💧', id: 'boton_agua'},
+    {nombre: '💧', id: 'boton_agua'},
+    {nombre: '🦶', id: 'boton_patada'},
+    {nombre: '👊', id: 'boton_puño'}
+)
+bulbasaurEnemigo.ataques.push(
+    {nombre: '🌱', id: 'boton_tierra'},
+    {nombre: '🌱', id: 'boton_tierra'},
+    {nombre: '🌱', id: 'boton_tierra'},
+    {nombre: '🦶', id: 'boton_patada'},
+    {nombre: '👊', id: 'boton_puño'}
+)
+charmanderEnemigo.ataques.push(
     {nombre: '🔥', id: 'boton_fuego'},
     {nombre: '🔥', id: 'boton_fuego'},
     {nombre: '🔥', id: 'boton_fuego'},
@@ -132,9 +166,7 @@ function iniciarJuego(){
 }
 function seleccionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none';
-    //sectionSeleccionarAtaque.style.display = 'flex';
     
-
     if(inputSquirtle.checked){
         spanMascotaJugador.innerHTML = inputSquirtle.id
         mascotaJugador = inputSquirtle.id
@@ -148,7 +180,6 @@ function seleccionarMascotaJugador() {
         alert("selecciona una Mascota!")
     }
     extraerAtaques(mascotaJugador);
-    seleccionarMascotaEnemigo();
     iniciarMapa();
 }
 
@@ -214,10 +245,10 @@ function aleatorio (min, max){
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 //Funcion Enemigo Selecciona Su Mascota.
-function seleccionarMascotaEnemigo(){
+function seleccionarMascotaEnemigo(enemigo){
     let mascotaAleatoria = aleatorio(0, mokepones.length - 1)
-    spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre
-    ataquesMokeponEnemigo = mokepones[mascotaAleatoria].ataques
+    spanMascotaEnemigo.innerHTML = enemigo.nombre
+    ataquesMokeponEnemigo = enemigo.ataques
     secuenciaAtaques();
 }
 function ataqueAleatorioEnemigo(){
@@ -355,8 +386,6 @@ function detenerMovimiento(){
     mascotaJugadorObjeto.velocidadY = 0
 }
 function iniciarMapa() {
-    mapa.width = 420
-    mapa.height = 360
     mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador)
     sectionVerMapa.style.display = 'flex'
     intervalo = setInterval(pintarCanvas, 50)
@@ -385,7 +414,9 @@ function revisarColision(enemigo){
         return
     }
     detenerMovimiento();
-    alert("Hay colision con " + enemigo.nombre)
-    
+    clearInterval(intervalo)
+    sectionSeleccionarAtaque.style.display = 'flex';
+    sectionVerMapa.style.display = 'none'
+    seleccionarMascotaEnemigo(enemigo);
 }
 window.addEventListener('load', iniciarJuego)
