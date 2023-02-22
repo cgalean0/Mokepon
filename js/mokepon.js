@@ -21,45 +21,49 @@ const sectionVerMapa = document.getElementById('ver-mapa');
 const mapa = document.getElementById('mapa')
 const anchoMaximoDelMapa = 350
 
-let mascotaJugadorObjeto
+let jugadorId = null
+let enemigoId = null
 let mokepones = []
-let botones = []
-let opcionDeMokepones
-let ataqueJugador = []
+let mokeponesEnemigos = []
+let ataqueJugador =[]
 let ataqueEnemigo = []
-let indexAtaqueJugador
-let indexAtaqueEnemigo
-let inputSquirtle
-let inputBulbasaur
-let inputCharmander
+let opcionDeMokepones
+let inputHipodoge
+let inputCapipepo
+let inputRatigueya
+let mascotaJugador
+let mascotaJugadorObjeto
+let ataquesMokepon
+let ataquesMokeponEnemigo
 let botonFuego
 let botonAgua
 let botonTierra
-let mascotaJugador
-let ataquesMokepon
+let botones = []
+let indexAtaqueJugador
+let indexAtaqueEnemigo
 let victoriasJugador = 0
-let victoriasEnemigo = 0
-let ataquesMokeponEnemigo
-let vidasEnemigo = 3
+let victoriasEnemigo = 0 
 let vidasJugador = 3
-let lienzo = mapa.getContext('2d')
+let vidasEnemigo = 3
+let lienzo = mapa.getContext("2d")
 let intervalo
-let mapabackground = new Image()
-mapabackground.src = '../assets/Pueblo_Paleta_HGSS.png'
+let mapaBackground = new Image()
+mapaBackground.src = '../assets/Pueblo_Paleta_HGSS.png'
 let alturaQueBuscamos
 let anchoDelMapa = window.innerWidth - 20
+
+if (anchoDelMapa > anchoMaximoDelMapa) {
+    anchoDelMapa = anchoMaximoDelMapa - 20
+}
 
 alturaQueBuscamos = anchoDelMapa * 600 / 800
 
 mapa.width = anchoDelMapa
 mapa.height = alturaQueBuscamos
 
-if(anchoDelMapa > anchoMaximoDelMapa){
-    anchoDelMapa = anchoMaximoDelMapa - 20
-}
-
 class Mokepon{
-    constructor(nombre, foto, vida, fotoMapa){
+    constructor(nombre, foto, vida, fotoMapa, id = null){
+        this.id = id
         this.nombre = nombre;
         this.foto = foto;
         this.vida = vida;
@@ -84,60 +88,38 @@ class Mokepon{
         )
     }
 }
-//Objetos
+
 let squirtle = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png');
 let bulbasaur = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
 let charmander = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
 
-let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png');
-let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
-let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
+const SQUIRTLE_ATAQUES = [
+    {nombre: '💧', id: 'boton_agua'},
+    {nombre: '💧', id: 'boton_agua'},
+    {nombre: '💧', id: 'boton_agua'},
+    {nombre: '🦶', id: 'boton_patada'},
+    {nombre: '👊', id: 'boton_puño'}
+]
+const BULBASAUR_ATAQUES = [
+    {nombre: '🌱', id: 'boton_tierra'},
+    {nombre: '🌱', id: 'boton_tierra'},
+    {nombre: '🌱', id: 'boton_tierra'},
+    {nombre: '🦶', id: 'boton_patada'},
+    {nombre: '👊', id: 'boton_puño'}
+]
+const CHARMANDER_ATAQUES = [
+    {nombre: '🔥', id: 'boton_fuego'},
+    {nombre: '🔥', id: 'boton_fuego'},
+    {nombre: '🔥', id: 'boton_fuego'},
+    {nombre: '🦶', id: 'boton_patada'},
+    {nombre: '👊', id: 'boton_puño'}
+]
+
+squirtle.ataques.push(...SQUIRTLE_ATAQUES)
+bulbasaur.ataques.push(...BULBASAUR_ATAQUES)
+charmander.ataques.push(...CHARMANDER_ATAQUES)
 
 
-squirtle.ataques.push(
-    {nombre: '💧', id: 'boton_agua'},
-    {nombre: '💧', id: 'boton_agua'},
-    {nombre: '💧', id: 'boton_agua'},
-    {nombre: '🦶', id: 'boton_patada'},
-    {nombre: '👊', id: 'boton_puño'}
-)
-bulbasaur.ataques.push(
-    {nombre: '🌱', id: 'boton_tierra'},
-    {nombre: '🌱', id: 'boton_tierra'},
-    {nombre: '🌱', id: 'boton_tierra'},
-    {nombre: '🦶', id: 'boton_patada'},
-    {nombre: '👊', id: 'boton_puño'}
-)
-charmander.ataques.push(
-    {nombre: '🔥', id: 'boton_fuego'},
-    {nombre: '🔥', id: 'boton_fuego'},
-    {nombre: '🔥', id: 'boton_fuego'},
-    {nombre: '🦶', id: 'boton_patada'},
-    {nombre: '👊', id: 'boton_puño'}
-
-)
-squirtleEnemigo.ataques.push(
-    {nombre: '💧', id: 'boton_agua'},
-    {nombre: '💧', id: 'boton_agua'},
-    {nombre: '💧', id: 'boton_agua'},
-    {nombre: '🦶', id: 'boton_patada'},
-    {nombre: '👊', id: 'boton_puño'}
-)
-bulbasaurEnemigo.ataques.push(
-    {nombre: '🌱', id: 'boton_tierra'},
-    {nombre: '🌱', id: 'boton_tierra'},
-    {nombre: '🌱', id: 'boton_tierra'},
-    {nombre: '🦶', id: 'boton_patada'},
-    {nombre: '👊', id: 'boton_puño'}
-)
-charmanderEnemigo.ataques.push(
-    {nombre: '🔥', id: 'boton_fuego'},
-    {nombre: '🔥', id: 'boton_fuego'},
-    {nombre: '🔥', id: 'boton_fuego'},
-    {nombre: '🦶', id: 'boton_patada'},
-    {nombre: '👊', id: 'boton_puño'}
-
-)
 mokepones.push(squirtle, bulbasaur, charmander)
 //Funcion iniciar juego.
 function iniciarJuego(){
@@ -162,8 +144,23 @@ function iniciarJuego(){
     botonReiniciarOculto.style.display ='none';
     botonMascotaJugador.addEventListener('click', seleccionarMascotaJugador )
     botonReiniciar.addEventListener('click', reiniciarJuego);
-    
+
+    unirseAlJuego();
 }
+
+function unirseAlJuego(){
+    fetch("http://localhost:8080/unirse")
+        .then(function(res) {            
+                if (res.ok) {
+                    res.text()
+                        .then(function (respuesta){
+                            console.log(respuesta)
+                            jugadorId = respuesta
+                        })
+                }
+        })
+}
+
 function seleccionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none';
     
@@ -179,8 +176,22 @@ function seleccionarMascotaJugador() {
     }else {
         alert("selecciona una Mascota!")
     }
+
+    seleccionarMokepon(mascotaJugador)
     extraerAtaques(mascotaJugador);
     iniciarMapa();
+}
+
+function seleccionarMokepon(mascotaJugador) {
+    fetch(`http://localhost:8080/mokepon/${jugadorId}`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            mokepon: mascotaJugador
+        })
+    })
 }
 
 function extraerAtaques(mascotaJugador){
@@ -330,26 +341,59 @@ function reiniciarJuego(){
 }
 
 function pintarCanvas(){
-
     mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.velocidadX
     mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.velocidadY
     lienzo.clearRect(0,0,mapa.width,mapa.height);
     lienzo.drawImage(
-        mapabackground,
+        mapaBackground,
         0,
         0,
         mapa.width,
         mapa.height
     )
     mascotaJugadorObjeto.pintarMokepon();
-    squirtleEnemigo.pintarMokepon();
-    bulbasaurEnemigo.pintarMokepon();
-    charmanderEnemigo.pintarMokepon();
-    if(mascotaJugadorObjeto.velocidadX !== 0 || mascotaJugadorObjeto.velocidadY !== 0){
-        revisarColision(squirtleEnemigo);
-        revisarColision(bulbasaurEnemigo);
-        revisarColision(charmanderEnemigo);
-    }
+
+        enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y);
+
+    mokeponesEnemigos.forEach(function (mokepon) {
+        mokepon.pintarMokepon()
+        revisarColision(mokepon);
+    })
+}
+
+function enviarPosicion(x, y) {
+    fetch(`http://localhost:8080/mokepon/${jugadorId}/posicion`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            x,
+            y
+        })
+    })
+    .then(function(res){
+        if(res.ok){
+            res.json()
+                .then(function({enemigos}){
+                    console.log(enemigos)
+                    mokeponesEnemigos = enemigos.map(function(enemigo) {
+                    let mokeponEnemigo = null
+                    const mokeponNombre = enemigo.mokepon.nombre
+                    if(mokeponNombre === "Squirtle"){
+                        mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png');
+                    } else if(mokeponNombre === "Bulbasaur"){
+                        mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
+                    } else if(mokeponNombre === "Charmander"){
+                        mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
+                    }
+                    mokeponEnemigo.x = enemigo.x
+                    mokeponEnemigo.y = enemigo.y
+                    return mokeponEnemigo
+                })
+            })
+        }
+    })
 }
 
 function moverX() {
