@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mokepon🌱💧🔥</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <section id="seleccionar_mascota">
@@ -21,10 +21,10 @@
     <section id="ver-mapa">
         <h1 class="title2">Recorre el Mapa con tu Mokepon</h1>
         <canvas id="mapa"></canvas>
-        <button onmouseup="detenerMovimiento()" onmousedown="moverU()">⬆️</button>
-        <button onmouseup="detenerMovimiento()" onmousedown="moverX()">➡️</button>
-        <button onmouseup="detenerMovimiento()" onmousedown="moverR()">⬅️</button>
-        <button onmouseup="detenerMovimiento()" onmousedown="moverY()">⬇️</button>
+        <button id="botomesMovimiento" ontouchend="detenerMovimiento()" ontouchstart="moverU()" onmouseup="detenerMovimiento()" onmousedown="moverU()">⬆️</button>
+        <button id="botomesMovimiento" ontouchend="detenerMovimiento()" ontouchstart="moverx()" onmouseup="detenerMovimiento()" onmousedown="moverX()">➡️</button>
+        <button id="botomesMovimiento" ontouchend="detenerMovimiento()" ontouchstart="moverR()" onmouseup="detenerMovimiento()" onmousedown="moverR()">⬅️</button>
+        <button id="botomesMovimiento" ontouchend="detenerMovimiento()" ontouchstart="moverY()" onmouseup="detenerMovimiento()" onmousedown="moverY()">⬇️</button>
     </section>
     <section id="selecionar_ataque">
         <h1 class="title">Mokepon</h1>
@@ -53,6 +53,6 @@
             </div>
         </div>
     </section>
-    <script src="./js/mokepon.js"></script>
+    <script src="mokepon.js"></script>
 </body>
 </html>

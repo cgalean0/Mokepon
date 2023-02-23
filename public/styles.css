@@ -8,6 +8,7 @@
 }
 body {
     background-color: #041b24;
+    overflow: hidden;
 }
 
 #seleccionar_mascota {
@@ -179,7 +180,12 @@ input:checked + label {
     justify-content: center;
 }
 
-@media (max-width:360px) {
+#botonesMovimiento{
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 422px) {
     .title {
         font-size:62px;
     }
