@@ -162,8 +162,6 @@ function unirseAlJuego(){
 }
 
 function seleccionarMascotaJugador() {
-    sectionSeleccionarMascota.style.display = 'none';
-    
     if(inputSquirtle.checked){
         spanMascotaJugador.innerHTML = inputSquirtle.id
         mascotaJugador = inputSquirtle.id
@@ -175,7 +173,10 @@ function seleccionarMascotaJugador() {
         mascotaJugador = inputCharmander.id
     }else {
         alert("selecciona una Mascota!")
+        return
     }
+
+    sectionSeleccionarMascota.style.display = 'none';
 
     seleccionarMokepon(mascotaJugador)
     extraerAtaques(mascotaJugador);
@@ -247,11 +248,44 @@ function secuenciaAtaques() {
                 boton.style.background = '#112f58'
                 boton.disabled = true
             }
-            ataqueAleatorioEnemigo();
+            if(ataqueJugador.length === 5){
+                enviarAtaques();
+            }
         })
     })
     
 }
+
+function enviarAtaques(){
+    fetch(`http://localhost:8080/mokepon/${jugadorId}/ataques`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            ataques: ataqueJugador
+        })
+    })
+    intervalo = setInterval(obtenerAtaques, 50)
+}
+
+function obtenerAtaques(){
+    fetch(`http://localhost:8080/mokepon/${enemigoId}/ataques`)
+        .then(function (res) {
+            if(res.ok){
+                res.json()
+                    .then(function({ ataques }){
+                        if(ataques.length === 5){
+                            ataqueEnemigo = ataques
+                            combate();
+                        }
+                    })
+            }
+        })
+
+        
+}
+
 function aleatorio (min, max){
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -289,6 +323,8 @@ function indexAmbosOponentes(jugador, enemigo) {
 }
 //Combate.
 function combate(){
+    clearInterval(intervalo);
+
     for (let i = 0; i < ataqueJugador.length; i++) {
         if(ataqueJugador[i] === ataqueEnemigo[i]){
             indexAmbosOponentes(i, i);
@@ -353,8 +389,8 @@ function pintarCanvas(){
     )
     mascotaJugadorObjeto.pintarMokepon();
 
-        enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y);
-
+    enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y);
+    
     mokeponesEnemigos.forEach(function (mokepon) {
         mokepon.pintarMokepon()
         revisarColision(mokepon);
@@ -372,20 +408,20 @@ function enviarPosicion(x, y) {
             y
         })
     })
-    .then(function(res){
+    .then(function (res){
         if(res.ok){
             res.json()
-                .then(function({enemigos}){
+                .then(function({ enemigos }){
                     console.log(enemigos)
                     mokeponesEnemigos = enemigos.map(function(enemigo) {
                     let mokeponEnemigo = null
                     const mokeponNombre = enemigo.mokepon.nombre
                     if(mokeponNombre === "Squirtle"){
-                        mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png');
+                        mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, '../assets/squirtle-ico.png', enemigo.id);
                     } else if(mokeponNombre === "Bulbasaur"){
-                        mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png');
+                        mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, '../assets/bullbasaur-ico.png', enemigo.id);
                     } else if(mokeponNombre === "Charmander"){
-                        mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png');
+                        mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, '../assets/charmander-ico.png', enemigo.id);
                     }
                     mokeponEnemigo.x = enemigo.x
                     mokeponEnemigo.y = enemigo.y
@@ -459,6 +495,7 @@ function revisarColision(enemigo){
     }
     detenerMovimiento();
     clearInterval(intervalo)
+    enemigoId = enemigo.id
     sectionSeleccionarAtaque.style.display = 'flex';
     sectionVerMapa.style.display = 'none'
     seleccionarMascotaEnemigo(enemigo);
